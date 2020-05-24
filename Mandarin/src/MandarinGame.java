@@ -65,9 +65,9 @@ public class MandarinGame {
 
         /** Ora svolgo l' asta vera e propria**/
 
-        while (plyers_in_auction.size() != 1){
+        while (plyers_in_auction.size() != 1){          // FIXME: mi da errore qui se provo a fare l'asta, nel caso del "no" per questo break
             for (Player player: plyers_in_auction) {
-                System.out.println("Vuoi offrire?  l'offerta è "+auction.getOffer());
+                System.out.println( player.toString()+" Vuoi offrire?  l'offerta è "+auction.getOffer());
                 String answer = scanner.next();
                 if(answer.equals("si")){
                     System.out.println("Quanto?");
@@ -77,15 +77,18 @@ public class MandarinGame {
                     }else{
                         System.out.println("L'importo non è corretto!");
                     }
-                }else{
+                }else if(answer.equals("no")){
                     plyers_in_auction.remove(player);
+                          if(plyers_in_auction.size()==1)
+                          break;
                 }
             }
         }
         Player auction_winner = plyers_in_auction.get(0);
         for (Figure figure:figure_in_palio) {
-            auction_winner.add_Figure(figure);
+            auction_winner.add_Figure(figure); //fixme : non vengono assegnate le figure? me ne accorgo dalla stampa
         }
+        auction_winner.figuresOfPlayer();
     }
 
 

@@ -69,12 +69,22 @@ public class Player {
     }
 
     public boolean choose_extract(Scanner scanner){
-        System.out.println("Vuoi estrarre ancora?");
+        System.out.println(this.name.toUpperCase()+" vuoi estrarre ancora?");
         String choice = scanner.next();
         if (choice.equals("si")){
             return true;
         }
+        figuresOfPlayer();
         return false;
+    }
+
+    public void figuresOfPlayer() { // stampa le figure del giocatore
+        String animals="";
+        for(int i=0; i<figures_extracted.size();i++)
+        {
+            animals=animals +", "+figures_extracted.get(i).toString();
+        }
+        System.out.print(this.name+ " ha " + animals+"\n");
     }
 
     public ArrayList<Figure> getFigures_extracted() {
