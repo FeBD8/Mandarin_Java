@@ -25,10 +25,8 @@ public class Card {
     }
 
     public void add_figure_on_card(Figure figure){
-        int i = 0;
-        int j = 0;
-        for( i = 0; i < 6; i++){
-            for( j = 0; j < 12; j++){
+        for( int i = 0; i < 6; i++){
+            for( int j = 0; j < 12; j++){
                 if (figures[i][j].equals(figure)){
                     bool_figures[i][j] = true;
                     break;
@@ -50,5 +48,20 @@ public class Card {
             return true;
         }
         return false;
+    }
+
+    public String stampaFigure(){
+        String animals= "";
+        for( int i = 0; i < 6; i++){
+            for( int j = 0; j < 12; j++){
+                if (bool_figures[i][j]){
+                    animals= animals + figures[i][j].toString() + ", ";
+                }
+            }
+        }
+        if(!animals.equals(""))
+            animals=animals.substring(0, animals.length()-2);
+
+        return animals + "\n";
     }
 }

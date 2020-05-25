@@ -88,6 +88,7 @@ public class MandarinGame {
         for (Figure figure:figure_in_palio) {
             auction_winner.add_Figure(figure); //fixme : non vengono assegnate le figure? me ne accorgo dalla stampa
         }
+        auction_winner.printNewFiguresPlayer();
         auction_winner.figuresOfPlayer();
     }
 

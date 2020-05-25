@@ -42,7 +42,7 @@ public class Player {
                 figures_extracted.removeAll(figures_extracted);
                 break;
             }
-        }while (figures_extracted.get(last_index).getSide() == "COPERTA");
+        }while (figures_extracted.get(last_index).getSide().equals("COPERTA"));
     }
 
 
@@ -74,17 +74,18 @@ public class Player {
         if (choice.equals("si")){
             return true;
         }
+        printNewFiguresPlayer();
         figuresOfPlayer();
         return false;
     }
 
-    public void figuresOfPlayer() { // stampa le figure del giocatore
-        String animals="";
-        for(int i=0; i<figures_extracted.size();i++)
-        {
-            animals=animals +", "+figures_extracted.get(i).toString();
+    // stampa le figure del giocatore
+    public void figuresOfPlayer() {
+        if (card.stampaFigure().equals(""+"\n")) {
+            System.out.print(name.toUpperCase() + " non aveva altre figure \n\n");
+        }else {
+            System.out.print(name.toUpperCase() + " ha già "+ card.stampaFigure()+ "\n\n");
         }
-        System.out.print(this.name+ " ha " + animals+"\n");
     }
 
     public ArrayList<Figure> getFigures_extracted() {
@@ -100,6 +101,16 @@ public class Player {
             }
         }
     }
+
+    public void printNewFiguresPlayer(){
+            String animals="";
+            for(int i=0; i<figures_extracted.size();i++)
+            {
+                animals=animals +figures_extracted.get(i).toString()+", ";
+            }
+            animals= animals.substring(0,animals.length()-2);
+            System.out.print("\n Le figure erano " + animals+"\n");
+        }
 
     @Override
     public String toString() {
