@@ -38,13 +38,13 @@ public class MandarinGame {
             players[i].take_turn(die,board,pagoda,scanner);
             if (players[i].getFigures_extracted().size() == 0){
             }else{
-                do_auction(players[i].getFigures_extracted(),i,n_players,scanner);
+                do_auction(players[i].getFigures_extracted(),n_players,scanner);
                 players[i].getFigures_extracted().removeAll(players[i].getFigures_extracted());
             }
         }
     }
 
-    public void do_auction(ArrayList<Figure> figure_in_palio,int start_index,int n_players,Scanner scanner){
+   /* public void do_auction(ArrayList<Figure> figure_in_palio,int start_index,int n_players,Scanner scanner){
         Auction auction = new Auction(figure_in_palio);
         ArrayList<Player> plyers_in_auction = new ArrayList<>();
         int i = start_index;
@@ -63,7 +63,7 @@ public class MandarinGame {
             plyers_in_auction.add(players[i]);
         }
 
-        /** Ora svolgo l' asta vera e propria**/
+        // Ora svolgo l' asta vera e propria
 
         while (plyers_in_auction.size() != 1){          // FIXME: mi da errore qui se provo a fare l'asta, nel caso del "no" per questo break
             for (Player player: plyers_in_auction) {
@@ -91,7 +91,7 @@ public class MandarinGame {
         auction_winner.printNewFiguresPlayer();
         auction_winner.figuresOfPlayer();
     }
-
+*/
 
     public boolean chech_players_for_winner(int n_players){
         for (int i = 0; i<n_players; i++){
@@ -118,5 +118,67 @@ public class MandarinGame {
         System.out.println("Congratulazioni "+game.winner.toString()+" hai vinto la partita!");
     }
 
+
+
+
+
+
+    public void do_auction(ArrayList<Figure> figure_in_palio,int n_players,Scanner scanner){
+        Auction auction = new Auction(figure_in_palio);
+        ArrayList<Player> players_in_auction = new ArrayList<>();
+        int i;
+
+        for (i = 0; i<n_players; i ++){
+            players_in_auction.add(players[i]);
+        }
+
+        /** Ora svolgo l' asta vera e propria**/
+
+       do {
+           asta(players_in_auction,auction,scanner);
+        }  while (players_in_auction.size() != 1);
+
+        Player auction_winner = players_in_auction.get(0);
+        auction_winner.setFigures_extracted(figure_in_palio);
+        auction_winner.printNewFiguresPlayer();
+        auction_winner.figuresOfPlayer();
+        for (Figure figure:figure_in_palio) {
+            auction_winner.add_Figure(figure);
+        }
+
+    }
+
+
+    public void asta(ArrayList<Player> players_in_auction, Auction auction, Scanner scanner){
+
+        for (Player player: players_in_auction) {
+            System.out.println( player.toString()+" Vuoi offrire?  l'offerta è "+auction.getOffer());
+            String answer = scanner.next();
+
+            if(answer.equals("si")){
+                player.setIs_offering(true);
+                System.out.println("Quanto?");
+                int amount = scanner.nextInt();
+                if (amount>auction.getOffer()){
+                    auction.add_offer(amount);
+                }else{
+                    System.out.println("L'importo non è corretto!");
+                }
+            }else if(answer.equals("no")){
+                player.setIs_offering(false);
+                if(players_in_auction.size() == 1)
+                { break;
+                }
+            }
+        }
+
+        for (int i=0; i<players_in_auction.size();i++) {
+            if(!players_in_auction.get(i).isIs_offering())
+            {
+                players_in_auction.remove(players_in_auction.get(i));
+                i--;
+            }
+        }
+    }
 
 }

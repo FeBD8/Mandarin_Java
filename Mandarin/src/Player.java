@@ -108,9 +108,21 @@ public class Player {
             {
                 animals=animals +figures_extracted.get(i).toString()+", ";
             }
-            animals= animals.substring(0,animals.length()-2);
+           // animals= animals.substring(0,animals.length()-2);
             System.out.print("\n Le figure erano " + animals+"\n");
         }
+
+    public void setIs_offering(boolean is_offering) {
+        this.is_offering = is_offering;
+    }
+
+    public boolean isIs_offering() {
+        return is_offering;
+    }
+
+    public void setFigures_extracted(ArrayList<Figure> figures_extracted) {
+        this.figures_extracted = figures_extracted;
+    }
 
     @Override
     public String toString() {
