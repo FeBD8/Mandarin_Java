@@ -32,4 +32,11 @@ public class Pagoda {
         pag_figures.remove(extracted);
         return extracted;
     }
+
+
+    public boolean thereIs(){
+        if (pag_figures.size() == 0)
+            return false;
+        return true;
+    }
 }

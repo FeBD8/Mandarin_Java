@@ -11,5 +11,6 @@ public class SordiSquare extends Square{
     @Override
     public void landedOn(Player player, Pagoda pagoda,Scanner scanner) {
         player.add_yuhan(100);
+        System.out.print(player.toString().toUpperCase()+" ha preso 100 Yuhan ( i sordi fanno sempre bbene)\n\n");
     }
 }

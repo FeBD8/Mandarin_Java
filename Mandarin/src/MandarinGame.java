@@ -6,7 +6,7 @@ import java.util.Scanner;
 
 public class MandarinGame {
     private Pagoda pagoda;
-    private Die die;
+    private Dice dice;
     private Board board;
     private Player[] players;
     private ArrayList<Figure> figure_extracted;
@@ -14,14 +14,26 @@ public class MandarinGame {
 
     public MandarinGame() {
         this.pagoda = new Pagoda();
-        this.die = new Die();
+        this.dice = new Dice();
         this.board = new Board();
         this.figure_extracted = new ArrayList<>();
         this.winner = null;
     }
 
-    public void welcome(){
+    public int welcome(Scanner scanner){
         System.out.println("BENVENUTO IN MANDARIN\nQuanti giocatori?");
+        boolean b=true;
+        int i=0;
+        while(b) {
+            i = backInt(scanner,"RIPROVA con un numero");
+            if (i>1 && i<6){
+                b=false;
+            }
+            else{
+                System.out.print("RIPROVA con un numero compreso tra 2 e 5\n");
+            }
+        }
+        return i;
     }
 
     public void create_players(int n_players,Scanner scanner,Board board){
@@ -35,9 +47,10 @@ public class MandarinGame {
 
     public void play_round(int n_players,Scanner scanner){
         for (int i = 0; i < n_players; i++){
-            players[i].take_turn(die,board,pagoda,scanner);
+            players[i].take_turn(dice,board,pagoda,scanner);
             if (players[i].getFigures_extracted().size() == 0){
-            }else{
+
+            }else{ // FIXME: 27/05/2020 : nel caso dell'ultima pedina della pagoda, anche se l'ultima è coperta parte l'asta
                 do_auction(players[i].getFigures_extracted(),n_players,scanner);
                 players[i].getFigures_extracted().removeAll(players[i].getFigures_extracted());
             }
@@ -65,7 +78,7 @@ public class MandarinGame {
 
         // Ora svolgo l' asta vera e propria
 
-        while (plyers_in_auction.size() != 1){          // FIXME: mi da errore qui se provo a fare l'asta, nel caso del "no" per questo break
+        while (plyers_in_auction.size() != 1){
             for (Player player: plyers_in_auction) {
                 System.out.println( player.toString()+" Vuoi offrire?  l'offerta è "+auction.getOffer());
                 String answer = scanner.next();
@@ -86,7 +99,7 @@ public class MandarinGame {
         }
         Player auction_winner = plyers_in_auction.get(0);
         for (Figure figure:figure_in_palio) {
-            auction_winner.add_Figure(figure); //fixme : non vengono assegnate le figure? me ne accorgo dalla stampa
+            auction_winner.add_Figure(figure);
         }
         auction_winner.printNewFiguresPlayer();
         auction_winner.figuresOfPlayer();
@@ -106,8 +119,7 @@ public class MandarinGame {
     public static void main(String[] args) {
         MandarinGame game = new MandarinGame();
         Scanner scanner = new Scanner(System.in);
-        game.welcome();
-        int n_players = scanner.nextInt();
+        int n_players = game.welcome(scanner);
         game.create_players(n_players,scanner,game.board);
         boolean no_winner = true;
         while (no_winner){
@@ -149,22 +161,25 @@ public class MandarinGame {
     }
 
 
-    public void asta(ArrayList<Player> players_in_auction, Auction auction, Scanner scanner){
+    private void asta(ArrayList<Player> players_in_auction, Auction auction, Scanner scanner){
 
         for (Player player: players_in_auction) {
             System.out.println( player.toString()+" Vuoi offrire?  l'offerta è "+auction.getOffer());
             String answer = scanner.next();
 
-            if(answer.equals("si")){
+            if(answer.toLowerCase().equals("si")){
                 player.setIs_offering(true);
                 System.out.println("Quanto?");
-                int amount = scanner.nextInt();
-                if (amount>auction.getOffer()){
+                boolean b=true;
+                while(b){
+                    int amount = backInt(scanner,"Inserisci una cifra numerica");
+                if (amount>auction.getOffer() && amount%100 == 0){
                     auction.add_offer(amount);
+                    b=false;
                 }else{
                     System.out.println("L'importo non è corretto!");
                 }
-            }else if(answer.equals("no")){
+            }}else {
                 player.setIs_offering(false);
                 if(players_in_auction.size() == 1)
                 { break;
@@ -181,4 +196,19 @@ public class MandarinGame {
         }
     }
 
+
+    private int backInt(Scanner scanner, String ErroreString){  // controllo per inserie un numero e non una stringa
+        int i=0;
+        boolean c=true;
+        while(c){
+            if(scanner.hasNextInt()) {
+                i = scanner.nextInt();
+                c=false;
+            } else if (!scanner.hasNextInt()){
+                System.out.print(ErroreString+"\n");
+                scanner.next();
+            }
+        }
+        return i;
+    }
 }

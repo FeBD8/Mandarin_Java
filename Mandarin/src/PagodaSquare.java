@@ -9,6 +9,9 @@ public class PagodaSquare extends Square{
 
     @Override
     public void landedOn(Player player,Pagoda pagoda,Scanner scanner) {
-        player.estrazione(pagoda,scanner);
+        if(pagoda.thereIs())
+            player.estrazione(pagoda,scanner);
+        else
+            System.out.print("NON CI SONO PIU' FIGURE\n");
     }
 }

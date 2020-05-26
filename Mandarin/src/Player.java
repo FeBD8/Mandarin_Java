@@ -27,22 +27,32 @@ public class Player {
 
     public void estrazione(Pagoda pagoda,Scanner scanner){
         int last_index = 0;
-        figures_extracted.add(pagoda.estraiFigure());
-        print_figures_extracted();
-        do {
-            boolean scelta_extrazione = choose_extract(scanner);
-            if (scelta_extrazione) {
-                figures_extracted.add(pagoda.estraiFigure());
-                last_index +=1;
-                print_figures_extracted();
-            }else {
-                for (Figure figure:figures_extracted) {
-                    card.add_figure_on_card(figure);
-                }
-                figures_extracted.removeAll(figures_extracted);
-                break;
-            }
-        }while (figures_extracted.get(last_index).getSide().equals("COPERTA"));
+        if (pagoda.thereIs()) {
+            figures_extracted.add(pagoda.estraiFigure());
+            print_figures_extracted();
+            if(pagoda.thereIs()){
+                do {
+                    boolean scelta_extrazione = choose_extract(scanner);
+                    if (scelta_extrazione) {
+                        figures_extracted.add(pagoda.estraiFigure());
+                        if(!pagoda.thereIs()){
+                            System.out.print("NON CI SONO PIU' FIGURE\n");
+                            break;
+                        }
+                        last_index += 1;
+                        print_figures_extracted();
+                    } else {
+                        for (Figure figure : figures_extracted) {
+                            card.add_figure_on_card(figure);
+                        }
+                        figures_extracted.removeAll(figures_extracted);
+                        break;
+                    }
+                } while (figures_extracted.get(last_index).getSide().equals("COPERTA"));
+            } else
+                System.out.print("NON CI SONO PIU' FIGURE\n");
+        }else
+            System.out.print("NON CI SONO PIU' FIGURE\n");
     }
 
 
@@ -54,7 +64,7 @@ public class Player {
         return player_location;
     }
 
-    public void take_turn(Die die,Board board,Pagoda pagoda,Scanner scanner){
+    public void take_turn(Dice die,Board board,Pagoda pagoda,Scanner scanner){
         die.roll();
         player_location = board.getSquare(player_location,die.getFace_value());
         player_location.landedOn(this,pagoda,scanner);

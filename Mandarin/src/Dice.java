@@ -1,6 +1,6 @@
 import java.util.Random;
 
-public class Die {
+public class Dice {
     private int face_value;
 
     public void roll(){
