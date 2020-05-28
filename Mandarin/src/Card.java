@@ -1,5 +1,7 @@
 import EnumTypes.*;
 
+import java.util.ArrayList;
+
 public class Card {
     private Figure[][] figures;
     private boolean[][] bool_figures;
@@ -75,5 +77,28 @@ public class Card {
             animals=animals.substring(0, animals.length()-2);
 
         return animals + "\n";
+    }
+
+    public ArrayList<Figure> getFigures()
+    {
+        ArrayList<Figure> figure=new ArrayList<>();
+        for( int i = 0; i < 6; i++){
+            for( int j = 0; j < 12; j++){
+                if (bool_figures[i][j]){
+                    figure.add(figures[i][j]);
+                }
+            }
+        }
+        return figure;
+    }
+    public void removeFgureCard(Figure figure){
+        for( int i = 0; i < 6; i++){
+            for( int j = 0; j < 12; j++){
+                if (figures[i][j].equals(figure)){
+                    bool_figures[i][j] = false;
+                    break;
+                }
+            }
+        }
     }
 }

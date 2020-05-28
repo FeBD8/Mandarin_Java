@@ -1,6 +1,6 @@
-import javafx.scene.paint.Color;
+import EnumTypes.Animal;
+import EnumTypes.Color;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -65,39 +65,29 @@ public class Player {
     }
 
     public void take_turn(Dice die,Board board,Pagoda pagoda,Scanner scanner, Player[] players){
+        sellFigure(scanner,pagoda);
         die.roll();
         Square oldLocation= player_location;
-        boolean superato=false;
         ArrayList<Player> babbi=new ArrayList<>();
-        player_location = board.getSquare(player_location,die.getFace_value());
-
-        for (Player player:players) {
-            if(board.getValue(oldLocation)<board.getValue(player.getPlayer_location()) &&
-                    board.getValue(player_location)>board.getValue(player.getPlayer_location()))
-            {
-                babbi.add(player);
-                System.out.print(this.name.toUpperCase()+" ha superato "+player.toString().toUpperCase()+"\n");
-                superato=true;
-            }
-
-        }
+        player_location = board.setSquare(player_location,die.getFace_value());
+        boolean superato=surpass(players,oldLocation,board,babbi);
 
         if(superato){
             for (Player player:babbi) {
-                if(player.getCard().howTrue()!=0)
-                    System.out.print("Scegli tra queste figure di "+player.toString()+ " quale prendere\n"+ player.getCard().stampaFigure()+"\n\n");
-                // TODO: 28/05/2020 selezione di uno delle figure dell'avversario, magari in un metodo da poterlo usare anche per la vendita
-                else
+                if (player.getCard().howTrue() != 0) {
+                    this.stoleFigure(player,scanner);
+                }else
                     System.out.print("fiiga manca una figura ha "+ player.toString().toUpperCase()+"\n\n");
             }
             die.roll();
-            player_location = board.getSquare(player_location,die.getFace_value());
+            player_location = board.setSquare(player_location,die.getFace_value());
+            figuresOfPlayer();
         }else{
             player_location.landedOn(this,pagoda,scanner);
         }
+
         System.out.print(this.name.toUpperCase()+" si trova alla casella numero "+board.getValue(player_location)+"()\n\n");
         // mi serve per sapere dove si trova poi mettero player_location.getPosizione()
-
     }
 
     public boolean check_victory(){
@@ -171,4 +161,86 @@ public class Player {
     public Card getCard() {
         return card;
     }
+
+    public boolean isThereFigure(Figure figura, ArrayList<Figure> figures){
+        boolean a=false;
+        boolean c=false;
+        for (Figure f:figures) {
+            if (f.getAnimal()==figura.getAnimal()) {
+                a = true;
+                if (f.getColor() == figura.getColor())
+                    c = true;
+            }if (a&&c)
+                break;
+
+        }
+        return a&&c;
+    }
+    public void moveFigures(Animal animal,Color color,  Player player) {
+        Figure figure=new Figure(animal,color);
+        player.getCard().removeFgureCard(figure);
+        this.getCard().add_figure_on_card(figure);
+
+    }
+
+    public Figure chooseFigura(Scanner scanner){
+        System.out.print("Scegli l'animale :  ");
+        Animal animal = Animal.valueOf(scanner.next().toUpperCase());
+        System.out.print("\nScegli il colore :  ");
+        Color color = Color.valueOf(scanner.next().toUpperCase());
+        return new Figure(animal,color);
+    }
+
+    public void sellFigure(Scanner scanner,Pagoda pagoda)
+    {
+        if(this.getCard().howTrue() != 0) {
+            System.out.print(this.toString().toUpperCase()+ " Vuoi vendere una figura? ");
+            if(scanner.next().toLowerCase().equals("si")) {
+                System.out.print(this.getCard().stampaFigure());
+                boolean noSold=true;
+                do{
+                    Figure soldFigure= chooseFigura(scanner);
+                    if (isThereFigure(soldFigure, this.getCard().getFigures())) {
+                        this.getCard().removeFgureCard(soldFigure);
+                        this.add_yuhan(200);
+                        pagoda.getPag_figures().add(soldFigure); // non ho testato se funziona
+                        noSold=false;
+                    }
+                    else{
+                        System.out.print(this.toString().toUpperCase()+" non ha la figura selezionata, riprova" + "\n");
+                    }
+                }while (noSold);
+
+            }
+        }
+    }
+
+    public void stoleFigure(Player robbed,Scanner scanner){
+        System.out.print("Scegli tra queste figure di " + robbed.toString() + " quale prendere\n" + robbed.getCard().stampaFigure() + "\n\n");
+        boolean noStolen = true;
+        do {
+            Figure f= chooseFigura(scanner);
+            if (isThereFigure(f, robbed.getCard().getFigures())) {
+                this.moveFigures(f.getAnimal(), f.getColor(), robbed);
+                noStolen=false;
+            }else{
+                System.out.print(robbed.toString().toUpperCase()+" non ha la figura selezionata, riprova" + "\n");
+            }
+        } while (noStolen);
+    }
+
+    public boolean surpass(Player[] players, Square oldLocation, Board board ,ArrayList<Player> babbi){
+        boolean superato=false;
+        for (Player player:players) {
+            if(board.getValue(oldLocation)<board.getValue(player.getPlayer_location()) &&
+                    board.getValue(player_location)>board.getValue(player.getPlayer_location()))
+            {
+                babbi.add(player);
+                System.out.print(this.name.toUpperCase()+" ha superato "+player.toString().toUpperCase()+"\n");
+                superato=true;
+            }
+        }
+        return superato;
+    }
 }
+

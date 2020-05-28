@@ -18,7 +18,7 @@ public class Board {
         }
     }
 
-    public Square getSquare(Square oldloc,int die_value){
+    public Square setSquare(Square oldloc, int die_value){
         for (int i = 0; i<36; i ++){
             if(board_squares[i] == oldloc){
                 int new_indice = i + die_value;

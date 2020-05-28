@@ -39,4 +39,8 @@ public class Pagoda {
             return false;
         return true;
     }
+
+    public ArrayList<Figure> getPag_figures() {
+        return pag_figures;
+    }
 }
