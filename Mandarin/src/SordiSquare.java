@@ -13,4 +13,8 @@ public class SordiSquare extends Square{
         player.add_yuhan(100);
         System.out.print(player.toString().toUpperCase()+" ha preso 100 Yuhan ( i sordi fanno sempre bbene)\n\n");
     }
+
+    public String getPosizione(){
+        return toString()+ " sordiSquare"; //fixme vorrei sapere su quale animale sono? come faccio
+    }
 }

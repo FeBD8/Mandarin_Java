@@ -14,4 +14,8 @@ public class PagodaSquare extends Square{
         else
             System.out.print("NON CI SONO PIU' FIGURE\n");
     }
+
+    public String getPosizione(){
+        return toString()+ " pagodaSquare"; //fixme vorrei sapere su quale animale sono? come faccio
+    }
 }

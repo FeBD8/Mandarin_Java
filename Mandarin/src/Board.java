@@ -31,7 +31,18 @@ public class Board {
         return null;
     }
 
-    public Square[] getBoard_squares() {
+    public int getValue(Square square) {
+        int i = 0;
+        while (i < 36) {
+            if (board_squares[i] == square) {
+                return i;
+            }
+            i++;
+        }
+        return i;
+    }
+
+        public Square[] getBoard_squares() {
         return board_squares;
     }
 }

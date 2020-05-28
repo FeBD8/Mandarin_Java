@@ -64,10 +64,39 @@ public class Player {
         return player_location;
     }
 
-    public void take_turn(Dice die,Board board,Pagoda pagoda,Scanner scanner){
+    public void take_turn(Dice die,Board board,Pagoda pagoda,Scanner scanner, Player[] players){
         die.roll();
+        Square oldLocation= player_location;
+        boolean superato=false;
+        ArrayList<Player> babbi=new ArrayList<>();
         player_location = board.getSquare(player_location,die.getFace_value());
-        player_location.landedOn(this,pagoda,scanner);
+
+        for (Player player:players) {
+            if(board.getValue(oldLocation)<board.getValue(player.getPlayer_location()) &&
+                    board.getValue(player_location)>board.getValue(player.getPlayer_location()))
+            {
+                babbi.add(player);
+                System.out.print(this.name.toUpperCase()+" ha superato "+player.toString().toUpperCase()+"\n");
+                superato=true;
+            }
+
+        }
+
+        if(superato){
+            for (Player player:babbi) {
+                if(player.getCard().howTrue()!=0)
+                    System.out.print("Scegli tra queste figure di "+player.toString()+ " quale prendere\n"+ player.getCard().stampaFigure()+"\n\n");
+                // TODO: 28/05/2020 selezione di uno delle figure dell'avversario, magari in un metodo da poterlo usare anche per la vendita
+                else
+                    System.out.print("fiiga manca una figura ha "+ player.toString().toUpperCase()+"\n\n");
+            }
+            die.roll();
+            player_location = board.getSquare(player_location,die.getFace_value());
+        }else{
+            player_location.landedOn(this,pagoda,scanner);
+        }
+        System.out.print(this.name.toUpperCase()+" si trova alla casella numero "+board.getValue(player_location)+"()\n\n");
+        // mi serve per sapere dove si trova poi mettero player_location.getPosizione()
 
     }
 
@@ -137,5 +166,9 @@ public class Player {
     @Override
     public String toString() {
         return name;
+    }
+
+    public Card getCard() {
+        return card;
     }
 }

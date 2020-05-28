@@ -50,6 +50,18 @@ public class Card {
         return false;
     }
 
+    public int howTrue(){
+        int n_true = 0;
+        for (int i=0;i<6;i++){
+            for (int j = 0; j<12; j++){
+                if (bool_figures[i][j]){
+                    n_true +=1;
+                }
+            }
+        }
+        return n_true;
+    }
+
     public String stampaFigure(){
         String animals= "";
         for( int i = 0; i < 6; i++){

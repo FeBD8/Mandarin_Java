@@ -10,4 +10,6 @@ public abstract class Square {
     }
 
     public abstract void landedOn(Player player, Pagoda pagoda,Scanner scanner);
+
+    public abstract String getPosizione();
 }
